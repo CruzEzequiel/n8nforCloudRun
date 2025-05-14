@@ -1,8 +1,7 @@
-# Dockerfile para n8n
 FROM n8nio/n8n:latest
 
-# Establece el puerto que n8n escuchará
-EXPOSE 5678
+# Cloud Run escucha en el puerto 8080
+ENV PORT=8080
+EXPOSE 8080
 
-# Comando para iniciar n8n
 CMD ["n8n"]
