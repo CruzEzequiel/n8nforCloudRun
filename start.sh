@@ -16,10 +16,22 @@ if docker ps -a --format '{{.Names}}' | grep -Eq '^n8n$'; then
   docker rm -f n8n
 fi
 
-# Ejecutar el contenedor con red host (para acceder a PostgreSQL local)
+# Eliminar imagen previa si existe
+if docker images | grep -Eq '^n8n\s'; then
+  echo "Eliminando imagen previa de n8n..."
+  docker rmi -f n8n
+fi
+
+# Construir nueva imagen con NGINX + n8n
+echo "Construyendo nueva imagen local de n8n (con NGINX)..."
+docker build -t n8n .
+
+# Ejecutar el contenedor en background (puerto 8080)
 docker run -d \
   --name n8n \
-  --network="host" \
+  -p 8080:8080 \
+  -e N8N_PORT=5678 \
+  -e N8N_HOST=0.0.0.0 \
   -e DB_TYPE="$DB_TYPE" \
   -e DB_POSTGRESDB_HOST="$DB_POSTGRESDB_HOST" \
   -e DB_POSTGRESDB_PORT="$DB_POSTGRESDB_PORT" \
@@ -27,10 +39,8 @@ docker run -d \
   -e DB_POSTGRESDB_USER="$DB_POSTGRESDB_USER" \
   -e DB_POSTGRESDB_PASSWORD="$DB_POSTGRESDB_PASSWORD" \
   -e N8N_RUNNERS_ENABLED="$N8N_RUNNERS_ENABLED" \
-  n8nio/n8n
+  n8n
 
 echo "Mostrando logs..."
 echo "Presiona Ctrl+C para salir"
-
-# Mostrar logs en tiempo real
 docker logs -f n8n
