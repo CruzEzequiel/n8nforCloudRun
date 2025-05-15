@@ -29,7 +29,6 @@ docker run -d \
   -e N8N_RUNNERS_ENABLED="$N8N_RUNNERS_ENABLED" \
   n8nio/n8n
 
-echo "n8n ejecutándose en http://localhost:5678"
 echo "Mostrando logs..."
 echo "Presiona Ctrl+C para salir"
 

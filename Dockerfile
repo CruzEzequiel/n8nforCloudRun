@@ -1,7 +1,4 @@
 FROM n8nio/n8n:latest
 
-ENV N8N_PORT=8080
-ENV PORT=8080
-EXPOSE 8080
 
 CMD ["n8n"]
